@@ -1,0 +1,22 @@
+{
+  "name": "gotbet",
+  "version": "1.0.0",
+  "description": "you know nothing, jon snow",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aleksandarpavlovic/gotbet.git"
+  },
+  "author": "Aleksandar Pavlovic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aleksandarpavlovic/gotbet/issues"
+  },
+  "homepage": "https://github.com/aleksandarpavlovic/gotbet#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
