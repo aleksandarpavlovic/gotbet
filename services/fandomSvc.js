@@ -1,8 +1,8 @@
 const axios = require('axios');
 
 function fetchPages(ids) {
-	let idsCommaSeparated = ids.join('|');
-	return axios.get(`https://gameofthrones.fandom.com/api.php?action=query&prop=revisions&pageids=${idsCommaSeparated}&rvprop=content&format=json`);
+	let joinedIds = ids.join('|');
+	return axios.get(`https://gameofthrones.fandom.com/api.php?action=query&prop=revisions&pageids=${joinedIds}&rvprop=content&format=json`);
 };
 
 function extractStatuses(response) {
@@ -28,7 +28,13 @@ function extractStatus(pageContent) {
 	
 }
 
+// module.exports.fetchStatuses = function(ids) {
+// 	return fetchPages(ids)
+// 	.then(extractStatuses);
+// };
+
+// mocking return values, because of fis blocking policy
 module.exports.fetchStatuses = function(ids) {
-	return fetchPages(ids)
-	.then(extractStatuses);
-};
+	statuses = {"123": "Deceased", "234": "Alive", "345": "Alive", "456": "Deceased"};
+	return Promise.resolve(statuses);
+}
