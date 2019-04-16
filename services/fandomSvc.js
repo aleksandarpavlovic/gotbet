@@ -6,7 +6,7 @@ function fetchPages(ids) {
 };
 
 function extractStatuses(response) {
-	statuses = {};
+	let statuses = {};
 	if (response.data && response.data.query && response.data.query.pages) {
 		const entries = Object.entries(response.data.query.pages);
 		for (const [id, page] of entries) {
@@ -20,7 +20,7 @@ function extractStatuses(response) {
 };
 
 function extractStatus(pageContent) {
-	regexMatch = pageContent.match(/Status\s?=\s?\[\[.*?\|(\w+)\]\]/);
+	let regexMatch = pageContent.match(/Status\s?=\s?\[\[.*?\|(\w+)\]\]/);
 	if (regexMatch)
 		return regexMatch[1];
 	else
@@ -35,6 +35,6 @@ function extractStatus(pageContent) {
 
 // mocking return values, because of fis blocking policy
 module.exports.fetchStatuses = function(ids) {
-	statuses = {"123": "Deceased", "234": "Alive", "345": "Alive", "456": "Deceased"};
+	let statuses = {"123": "Deceased", "234": "Alive", "345": "Alive", "456": "Deceased"};
 	return Promise.resolve(statuses);
 }

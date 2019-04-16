@@ -1,11 +1,11 @@
 class Ticket {
-    constructor(id, name, statusBets, bonusBets) {
+    constructor(id, name, statusBets, questionBets) {
         this.id = id;
         this.name = name;
         this.statusBets = statusBets;
-        this.bonusBets = bonusBets;
+        this.questionBets = questionBets;
         this.statusHits = {};
-        this.bonusHits = {};
+        this.questionHits = {};
         this.points = 0;
     }
 }
