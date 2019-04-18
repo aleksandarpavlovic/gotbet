@@ -29,7 +29,7 @@ module.exports.calculatePoints(ticket, results) = function() {
 	let questionHits = {}
 	for(const[id, correctAnswer] of Object.entries(results.questions)) {
 		let points = 0;
-		if (correctAnswer == ticket.questions[id]) {
+		if (correctAnswer == ticket.questionBets[id]) {
 			if (id == QUESTION.PREGNANCY) {
 				points = SCORING.PREGNANCY;
 			} else if (id == QUESTION.NIGHT_KING_SLAYER) {

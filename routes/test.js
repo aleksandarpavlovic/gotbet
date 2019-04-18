@@ -19,6 +19,7 @@ router.post('/updatedb', function(req, res){
 	dao.save(new Character("2157", "Daenerys Targaryen", STATUS.UNKNOWN));
 	dao.save(new Character("4278", "Yaara Greyjoy", STATUS.UNKNOWN));
 	dao.save(new Character("2171", "Theon Greyjoy", STATUS.UNKNOWN));
+	dao.save(new Character("5695", "Euron Greyjoy", STATUS.UNKNOWN));
 	dao.save(new Character("4370", "Melisandre", STATUS.UNKNOWN));
 	dao.save(new Character("2175", "Jorah Mormont", STATUS.UNKNOWN));
 	dao.save(new Character("2174", "The Hound", STATUS.UNKNOWN));
@@ -35,7 +36,6 @@ router.post('/updatedb', function(req, res){
 	dao.save(new Character("11939", "Grey Worm", STATUS.UNKNOWN));
 	dao.save(new Character("2326", "Gendry", STATUS.UNKNOWN));
 	dao.save(new Character("2379", "Beric Dondarrion", STATUS.UNKNOWN));
-	dao.save(new Character("5695", "Euron Greyjoy", STATUS.UNKNOWN));54431
 	dao.save(new Character("54431", "Ned Umber", STATUS.UNKNOWN));
 });
 

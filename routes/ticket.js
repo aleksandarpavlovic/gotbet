@@ -7,8 +7,9 @@ router.get('/', function(req, res){
 });
 
 router.post('/', function(req, res){
-	dao.save(req.body);
-	res.send('200');
+	console.log(req.body);
+	dao.saveAll(req.body);
+	res.send(req.body);
 });
 
 router.put('/:id', function(req, res){
