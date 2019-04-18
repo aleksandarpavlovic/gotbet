@@ -1,4 +1,5 @@
 const axios = require('axios');
+const STATUS = require('../models/status.js');
 
 function fetchPages(ids) {
 	let joinedIds = ids.join('|');
@@ -20,21 +21,29 @@ function extractStatuses(response) {
 };
 
 function extractStatus(pageContent) {
-	let regexMatch = pageContent.match(/Status\s?=\s?\[\[.*?\|(\w+)\]\]/);
-	if (regexMatch)
-		return regexMatch[1];
-	else
-		return "No status";
-	
+	let statusMatch = pageContent.match(/\|\s?Status\s?=\s?\[\[.*?\|(\w+)\]\]/);
+	let wightMatch = pageContent.match(/\|\s?Culture\s?=(.*?)\[\[Wight\]\]/);
+	if (wightMatch && !wightMatch[1].includes("|")) {
+		return STATUS.WHITE_WALKER;
+	} else if (statusMatch) {
+		return transformStatus(statusMatch[1]);
+	} else {
+		return STATUS.UNKNOWN;
+	}
 }
 
-// module.exports.fetchStatuses = function(ids) {
-// 	return fetchPages(ids)
-// 	.then(extractStatuses);
-// };
+function transformStatus(rawStatus) {
+	switch(rawStatus) {
+		case "Alive":
+			return STATUS.ALIVE;
+		case "Deceased":
+			return STATUS.DECEASED;
+		default:
+			return STATUS.UNKNOWN; 
+	}
+}
 
-// mocking return values, because of fis blocking policy
 module.exports.fetchStatuses = function(ids) {
-	let statuses = {"123": "Deceased", "234": "Alive", "345": "Alive", "456": "Deceased"};
-	return Promise.resolve(statuses);
-}
+	return fetchPages(ids)
+	.then(extractStatuses);
+};

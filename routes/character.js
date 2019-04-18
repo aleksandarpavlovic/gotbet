@@ -17,6 +17,18 @@ router.get('/:id', function(req, res){
 	res.send(dao.fetch(req.params.id));
 });
 
+router.delete('/:id', function(req, res){
+	console.log("brisanje karaktera");
+	dao.remove(req.params.id);
+	res.send('obrisan karakter ${req.params.id}');
+});
+
+router.delete('/', function(req, res){
+	console.log("brisanje svih karaktera");
+	dao.removeAll();
+	res.send('obrisan karakter repo');
+});
+
 // router.get('/statuses', async function(req, res){
 // 	res.send(await fandom.fetchStatuses(["2123", "2128", "2041", "5"]));
 // });
