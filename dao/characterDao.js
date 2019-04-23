@@ -1,11 +1,13 @@
+const updaterDao = require('./updaterDao.js');
+
 let db = {};
 
-function save(character) {
+function create(character) {
     db[character.id] = character;
 }
 
-function saveAll(characters) {
-    characters.forEach(c => {save(c)});
+function createAll(characters) {
+    characters.forEach(c => {create(c)});
 }
 
 function fetch(id) {
@@ -21,20 +23,34 @@ function fetchAllIds() {
 }
 
 function updateStatus(id, status) {
-    if (db[id])
+    if (db[id]) {
         db[id].status = status;
+    }
+    updaterDao.updateTimestamp();
 }
 
 function remove(id) {
     delete db[id];
+    updaterDao.updateTimestamp();
 }
 
 function removeAll() {
     db = {};
+    updaterDao.updateTimestamp();
 }
 
-module.exports.save = save;
-module.exports.saveAll = saveAll;
+function updateTimestamp() {
+    updaterDao.updateTimestamp();
+}
+
+function getUpdateTimestamp() {
+    return updaterDao.getUpdateTimestamp();
+}
+
+module.exports.updateTimestamp = updateTimestamp;
+module.exports.getUpdateTimestamp = getUpdateTimestamp;
+module.exports.create = create;
+module.exports.createAll = createAll;
 module.exports.fetch = fetch;
 module.exports.fetchAll = fetchAll;
 module.exports.fetchAllIds = fetchAllIds;

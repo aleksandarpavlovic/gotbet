@@ -2,18 +2,12 @@ const updaterDao = require('./updaterDao.js');
 
 let db = {};
 
-function create(ticket) {
-    db[ticket.id] = ticket;
+function create(quizAnswer) {
+    db[quizAnswer.questionId] = quizAnswer;
 }
 
-function createAll(tickets) {
-    tickets.forEach(c => {create(c)});
-}
-
-function update(id, ticket) {
-    ticket.id = id;
-    db[id] = ticket;
-    updaterDao.updateTimestamp();
+function createAll(quizAnswers) {
+    quizAnswers.forEach(c => {create(c)});
 }
 
 function fetch(id) {
@@ -22,6 +16,17 @@ function fetch(id) {
 
 function fetchAll() {
     return Object.values(db);
+}
+
+function fetchAllIds() {
+    return Object.keys(db);
+}
+
+function update(id, answer) {
+    if (db[id]) {
+        db[id].answer = answer;
+    }
+    updaterDao.updateTimestamp();
 }
 
 function remove(id) {
@@ -45,9 +50,10 @@ function getUpdateTimestamp() {
 module.exports.updateTimestamp = updateTimestamp;
 module.exports.getUpdateTimestamp = getUpdateTimestamp;
 module.exports.create = create;
-module.exports.update = update;
 module.exports.createAll = createAll;
 module.exports.fetch = fetch;
 module.exports.fetchAll = fetchAll;
+module.exports.fetchAllIds = fetchAllIds;
+module.exports.update = update;
 module.exports.remove = remove;
 module.exports.removeAll = removeAll;

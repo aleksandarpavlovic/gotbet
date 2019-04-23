@@ -1,16 +1,20 @@
 const dao = require('../dao/ticketDao.js');
 const STATUS = require('../models/status.js');
-const QUESTION = require('../models/question.js/index.js');
+const QUESTION = require('../models/question.js');
+const EventEmitter = require('events').EventEmitter;
 
 const SCORING = {
-	CORRECT_STATUS = 1,
-	CORRECT_WW_STATUS = 2,
-	PREGNANCY = 1,
-	NIGHT_KING_SLAYER = 2,
-	THRONE_RULLER = 3
+	CORRECT_STATUS : 1,
+	CORRECT_WW_STATUS : 2,
+	PREGNANCY : 1,
+	NIGHT_KING_SLAYER : 2,
+	THRONE_RULLER : 3
 };
+
+const ticketEventEmitter = new EventEmitter();
+
 // racuna poene za ticket i vraca ticket
-module.exports.calculatePoints(ticket, results) = function() {
+function calculatePoints(ticket, results) {
 	let total = 0;
 	let statusHits = {}
 	for(const [id, status] of Object.entries(results.statuses)) {
@@ -27,7 +31,7 @@ module.exports.calculatePoints(ticket, results) = function() {
 	}
 
 	let questionHits = {}
-	for(const[id, correctAnswer] of Object.entries(results.questions)) {
+	for(const[id, correctAnswer] of Object.entries(results.answers)) {
 		let points = 0;
 		if (correctAnswer == ticket.questionBets[id]) {
 			if (id == QUESTION.PREGNANCY) {
@@ -45,14 +49,24 @@ module.exports.calculatePoints(ticket, results) = function() {
 	ticket.statusHits = statusHits;
 	ticket.questionHits = questionHits;
 	ticket.points = total;
+	return ticket;
 };
+module.exports.calculatePoints = calculatePoints;
 
-module.exports.calculatePointsList(tickets, results) = function() {
-	tickets.map(ticket => calculatePoints(ticket, results));
+function calculatePointsList(tickets, results) {
+	return tickets.map(ticket => calculatePoints(ticket, results));
 };
+module.exports.calculatePointsList = calculatePointsList;
+
+module.exports.updatePointsOnAllTickets = function(results) {
+	let tickets = dao.fetchAll();
+	calculatePointsList(tickets, results).forEach(ticket => {
+		dao.update(ticket.id, ticket);
+	});
+}
 
 // dohvata tikete sortirane po poenima
-module.exports.fetchRanked() = function() {
+module.exports.fetchRanked = function() {
 	let tickets = dao.fetchAll();
 	tickets.sort(a, b => a.points - b.points);
 	return tickets;

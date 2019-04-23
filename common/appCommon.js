@@ -1,0 +1,3 @@
+const REFRESH_INTERVAL = 1 * 60 * 1000;
+
+module.exports.REFRESH_INTERVAL = REFRESH_INTERVAL;

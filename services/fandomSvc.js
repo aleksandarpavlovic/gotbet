@@ -13,7 +13,7 @@ function extractStatuses(response) {
 		for (const [id, page] of entries) {
 			if (page.revisions && page.revisions[0] && page.revisions[0]["*"]) {
 				statuses[id] = extractStatus(page.revisions[0]["*"]);
-				console.log(page.title + "-" + id + " : " + statuses[id]);
+				// console.log(page.title + "-" + id + " : " + statuses[id]);
 			}
 		}
 	}
