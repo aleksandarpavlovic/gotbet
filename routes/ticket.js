@@ -44,11 +44,8 @@ function handleFetchPolling(id, clientDataTimestamp, response) {
 };
 
 function handlePolling(clientDataTimestamp, response, fetchResponseData) {
-	if (Date.now() - dao.getUpdateTimestamp() >= appCommon.REFRESH_INTERVAL) {
-		// trigger refresh of statuses and tickets
-		console.log('long polling za tikete');
-		bus.updaterTopic.emit('update', Date.now());
-	}
+	console.log('long polling za tikete');
+	bus.updaterTopic.emit('update', Date.now());
 
 	if (!clientDataTimestamp || (dao.getUpdateTimestamp() - clientDataTimestamp >= appCommon.REFRESH_INTERVAL)) {
 		response.send(createGetResponse(fetchResponseData()));

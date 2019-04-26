@@ -5,7 +5,8 @@ const port = 3000
 app.use(express.json());
 
 const bus = require('./services/bus.js');
-const updaterSvc = require('./services/updaterSvc.js');
+const UpdaterService = require('./services/updaterSvc.js');
+const updaterSvc = new UpdaterService();
 
 bus.updaterTopic.on('update', updaterSvc.onClientRequest);
 

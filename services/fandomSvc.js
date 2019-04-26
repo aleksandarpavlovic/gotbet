@@ -2,8 +2,12 @@ const axios = require('axios');
 const STATUS = require('../models/status.js');
 
 function fetchPages(ids) {
-	let joinedIds = ids.join('|');
-	return axios.get(`https://gameofthrones.fandom.com/api.php?action=query&prop=revisions&pageids=${joinedIds}&rvprop=content&format=json`);
+	if (ids) {
+		let joinedIds = ids.join('|');
+		return axios.get(`https://gameofthrones.fandom.com/api.php?action=query&prop=revisions&pageids=${joinedIds}&rvprop=content&format=json`);
+	} else {
+		return Promise.reject('No characters defined, cannot fetch statuses');
+	}
 };
 
 function extractStatuses(response) {
