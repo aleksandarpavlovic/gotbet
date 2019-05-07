@@ -39,6 +39,7 @@ router.get('/tickets/:id', function(req, res) {
 		templateContent.statusTableRows = values[1];
 		templateContent.quizTableRows = values[2];
 		templateContent.totalPoints = values[3].points;
+		templateContent.ticketName = values[3].name;
 		return populateTemplate(values[0], templateContent);
 	})
 	.then((html) => {res.send(html);})
