@@ -63,11 +63,12 @@ module.exports.updatePointsOnAllTickets = function(results) {
 	calculatePointsList(tickets, results).forEach(ticket => {
 		dao.update(ticket.id, ticket);
 	});
+	dao.updateTimestamp();
 }
 
 // dohvata tikete sortirane po poenima
 module.exports.fetchRanked = function() {
-	let tickets = dao.fetchAll();
-	tickets.sort(a, b => a.points - b.points);
+	let tickets = dao.fetchAllDTO();
+	tickets.sort(function(a, b) {return b.points - a.points;});
 	return tickets;
 };

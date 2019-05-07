@@ -14,10 +14,14 @@ const characterRoutes = require('./routes/character.js');
 const testRoutes = require('./routes/test.js');
 const ticketRoutes = require('./routes/ticket.js');
 const quizAnswerRoutes = require('./routes/quizAnswer.js');
+const htmlRoutes = require('./routes/html.js');
 
 app.use('/api/characters', characterRoutes);
 app.use('/api/tickets', ticketRoutes);
 app.use('/api/test', testRoutes);
-app.use('/api/quizanswers', quizAnswerRoutes)
+app.use('/api/quizanswers', quizAnswerRoutes);
+app.use('/', htmlRoutes);
+
+app.use(express.static(__dirname + "/resources/static"));
 
 app.listen(port);

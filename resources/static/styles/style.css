@@ -1,0 +1,80 @@
+html {
+  background-color: #262626; 
+}
+
+hr { 
+  display: block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  margin-left: auto;
+  margin-right: auto;
+  border-style: inset;
+  border-width: 1px;
+  width: 60%
+}
+
+a {
+  color: #bfbfbf;
+  text-decoration: none;
+  font-weight:normal;
+  font-size:large
+}
+
+a:hover, a:active {
+  font-weight:bold;
+}
+
+.ranks {
+  border-collapse: collapse;
+  margin-left: auto; 
+  margin-right: auto;
+  text-align: center;
+  width: 60%
+}
+
+.ranks td {
+  color: #bfbfbf;
+  text-align: center;
+}
+
+.ranks th{
+  color: #bfbfbf;
+  background-color: #1a1a1a;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.ranks tr:nth-child(even) {background-color: #333333;}
+
+.ranks tr:hover {
+  background-color: #404040;
+}
+
+.ticket {
+  border-collapse: collapse;
+  margin-left: auto; 
+  margin-right: auto;
+  text-align: center;
+  width: 60%
+}
+
+.ticket td {
+  color: #bfbfbf;
+  text-align: center;
+}
+
+.ticket th{
+  color: #bfbfbf;
+  background-color: #1a1a1a;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+tr.bethit {
+  background-color: #2b3b2b
+}
+
+tr.betmiss {
+  background-color: #3d2929
+}
+

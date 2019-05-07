@@ -77,7 +77,7 @@ class UpdaterService {
                 let statuses = {};
                 characterDao.fetchAll().forEach(character => statuses[character.id] = character.status);
                 let answers = {};
-                quizAnswerDao.fetchAll().forEach(quizAnswer => answers[quizAnswer.id] = quizAnswer.answer);
+                quizAnswerDao.fetchAll().forEach(quizAnswer => answers[quizAnswer.questionId] = quizAnswer.answer);
                 let ret = {};
                 ret.statuses = statuses; ret.answers = answers;
                 return ret;

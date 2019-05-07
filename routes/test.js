@@ -37,6 +37,7 @@ router.post('/updatedb', function(req, res){
 	dao.create(new Character("2326", "Gendry", STATUS.UNKNOWN));
 	dao.create(new Character("2379", "Beric Dondarrion", STATUS.UNKNOWN));
 	dao.create(new Character("54431", "Ned Umber", STATUS.UNKNOWN));
+	dao.create(new Character("31891", "Lyanna Mormont", STATUS.UNKNOWN));
 });
 
 router.post('/refreshStatuses', function(req, res){

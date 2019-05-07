@@ -9,7 +9,7 @@ router.get('/', function(req, res){
 });
 
 router.post('/', function(req, res){
-	console.log(req.body);
+	// console.log(req.body);
 	dao.createAll(req.body);
 	res.send(req.body);
 	bus.updaterTopic.emit('update', Date.now());

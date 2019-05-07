@@ -24,6 +24,16 @@ function fetchAll() {
     return Object.values(db);
 }
 
+function fetchAllDTO() {
+    return Object.values(db).map(function(ticket) {
+        let dto = {};
+        dto.id = ticket.id;
+        dto.name = ticket.name;
+        dto.points = ticket.points;
+        return dto;
+    });
+}
+
 function remove(id) {
     delete db[id];
     updaterDao.updateTimestamp();
@@ -49,5 +59,6 @@ module.exports.update = update;
 module.exports.createAll = createAll;
 module.exports.fetch = fetch;
 module.exports.fetchAll = fetchAll;
+module.exports.fetchAllDTO = fetchAllDTO;
 module.exports.remove = remove;
 module.exports.removeAll = removeAll;

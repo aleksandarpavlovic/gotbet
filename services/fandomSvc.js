@@ -27,7 +27,9 @@ function extractStatuses(response) {
 function extractStatus(pageContent) {
 	let statusMatch = pageContent.match(/\|\s?Status\s?=\s?\[\[.*?\|(\w+)\]\]/);
 	let wightMatch = pageContent.match(/\|\s?Culture\s?=(.*?)\[\[Wight\]\]/);
-	if (wightMatch && !wightMatch[1].includes("|")) {
+	let allegianceMatch = pageContent.match(/\|\s?Allegiance\s?=(.*?)\[\[White Walkers\]\]/);
+	
+	if ((wightMatch && !wightMatch[1].includes("|")) || (allegianceMatch && !allegianceMatch[1].includes("|"))) {
 		return STATUS.WHITE_WALKER;
 	} else if (statusMatch) {
 		return transformStatus(statusMatch[1]);

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const svc = require('../services/ticketSvc.js');
 const dao = require('../dao/ticketDao.js');
 const bus = require('../services/bus.js');
 const appCommon = require('../common/appCommon.js');
@@ -8,8 +9,12 @@ router.get('/', function(req, res){
 	handleFetchAllPolling(req.query.dataTimestamp, res);
 });
 
+router.get('/dto', function(req, res){
+	handleFetchAllDTOPolling(req.query.dataTimestamp, res);
+});
+
 router.post('/', function(req, res){
-	console.log(req.body);
+	// console.log(req.body);
 	dao.createAll(req.body);
 	res.send(req.body);
 });
@@ -37,6 +42,10 @@ router.delete('/', function(req, res){
 
 function handleFetchAllPolling(clientDataTimestamp, response) {
 	handlePolling(clientDataTimestamp, response, function() {return dao.fetchAll();});
+};
+
+function handleFetchAllDTOPolling(clientDataTimestamp, response) {
+	handlePolling(clientDataTimestamp, response, function() {return svc.fetchRanked();});
 };
 
 function handleFetchPolling(id, clientDataTimestamp, response) {
