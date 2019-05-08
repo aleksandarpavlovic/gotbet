@@ -1,4 +1,4 @@
-const ticketPageUrl = "http://localhost:3000/api/characters";
+const ticketPageUrl = "/api/characters";
 dataTimestamp = 0;
 
 const charactersTable = document.getElementById("characterstable").tBodies[0];

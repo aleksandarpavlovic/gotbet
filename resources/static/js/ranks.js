@@ -1,5 +1,6 @@
-const fetchDTOAPIUrl = "http://localhost:3000/api/tickets/dto";
-const ticketPageUrl = "http://localhost:3000/tickets";
+const fetchDTOAPIUrl = "/api/tickets/dto";
+const ticketPageUrl = "/tickets";
+
 dataTimestamp = 0;
 
 // const ranksTable = $("#rankstable > tbody:last");
