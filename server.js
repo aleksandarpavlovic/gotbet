@@ -1,6 +1,6 @@
 const express = require('Express');
 const app = express();
-const port = 3000
+const DEFAULT_PORT = 3000
 
 app.use(express.json());
 
@@ -24,4 +24,8 @@ app.use('/', htmlRoutes);
 
 app.use(express.static(__dirname + "/resources/static"));
 
+let port = process.env.PORT;
+if (port == null || port == "") {
+  port = DEFAULT_PORT;
+}
 app.listen(port);
