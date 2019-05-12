@@ -2,7 +2,7 @@ const axios = require('axios');
 const STATUS = require('../models/status.js');
 
 function fetchPages(ids) {
-	if (ids) {
+	if (ids && ids.length > 0) {
 		let joinedIds = ids.join('|');
 		return axios.get(`https://gameofthrones.fandom.com/api.php?action=query&prop=revisions&pageids=${joinedIds}&rvprop=content&format=json`);
 	} else {
@@ -51,5 +51,9 @@ function transformStatus(rawStatus) {
 
 module.exports.fetchStatuses = function(ids) {
 	return fetchPages(ids)
-	.then(extractStatuses);
+	.then(extractStatuses)
+	.catch(err => {
+		console.log(err);
+		return {};
+	});
 };

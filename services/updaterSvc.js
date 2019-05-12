@@ -6,6 +6,7 @@ const bus = require('./bus.js');
 const dao = require('../dao/updaterDao.js');
 const characterDao = require(`../dao/${appConf.DAO_IMPL}/characterDao.js`);
 const quizAnswerDao = require(`../dao/${appConf.DAO_IMPL}/quizAnswerDao.js`);
+const updaterDao = require('../dao/updaterDao.js');
 
 class UpdaterService {
     constructor() {
@@ -79,6 +80,9 @@ class UpdaterService {
                 characters.forEach(c => updateData.statuses[c.id] = c.status);
                 quizAnswers.forEach(a => updateData.answers[a.questionId] = a.answer);            
                 await ticketSvc.updatePointsOnAllTickets(updateData);
+
+                // need to perform timestamp update here because in case of empty db timestamp would not get updated, and polling would return immediately resulting in busy wait behavior
+                updaterDao.updateTimestamp();
                 
                 bus.charactersTopic.emit('notify');
                 bus.ticketsTopic.emit('notify');
