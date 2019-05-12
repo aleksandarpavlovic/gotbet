@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const fs = require('fs');
-const ticketDao = require('../dao/ticketDao.js');
-const characterDao = require('../dao/characterDao.js');
-const quizAnswerDao = require('../dao/quizAnswerDao.js');
+const appConf = require('../conf/appConf.js');
+const ticketDao = require(`../dao/${appConf.DAO_IMPL}/ticketDao.js`);
+const characterDao = require(`../dao/${appConf.DAO_IMPL}/characterDao.js`);
+const quizAnswerDao = require(`../dao/${appConf.DAO_IMPL}/quizAnswerDao.js`);
 const QUESTION = require('../models/question.js');
 
 router.get('/', function(req, res) {
@@ -19,31 +20,26 @@ router.get('/characters', function(req, res) {
 	res.sendFile(path.resolve(__dirname+ '/../resources/static/characters.html'));
 });
 
-router.get('/tickets/:id', function(req, res) {
-	let ticketStatusRowTemplate = readFile(path.resolve(__dirname+ '/../resources/static/ticket-status-row.html'));
-	let ticketQuizRowTemplate = readFile(path.resolve(__dirname+ '/../resources/static/ticket-quiz-row.html'));
-	let ticketPageTemplate = readFile(path.resolve(__dirname+ '/../resources/static/ticket.html'));
-	let ticket = Promise.resolve(ticketDao.fetch(req.params.id));
-	let populatedTicketStatusRowsPage = Promise.all([ticketStatusRowTemplate, ticket])
-	.then((values) => {
-		return populateTicketStatusRowsPage(values[0], values[1]);
-	});
-	let populatedTicketQuizRowsPage = Promise.all([ticketQuizRowTemplate, ticket])
-	.then((values) => {
-		return populateTicketQuizRowsPage(values[0], values[1]);
-	});
+router.get('/tickets/:id', async function(req, res) {
+	try {
+		let ticketStatusRowTemplate = readFile(path.resolve(__dirname+ '/../resources/static/ticket-status-row.html'));
+		let ticketQuizRowTemplate = readFile(path.resolve(__dirname+ '/../resources/static/ticket-quiz-row.html'));
+		let ticketPageTemplate = readFile(path.resolve(__dirname+ '/../resources/static/ticket.html'));
 
-	Promise.all([ticketPageTemplate, populatedTicketStatusRowsPage, populatedTicketQuizRowsPage, ticket])
-	.then((values) => {
+		let ticket = await ticketDao.fetch(req.params.id);
+		let fillStatuses = populateTicketStatusRowsPage(await ticketStatusRowTemplate, ticket);
+		let fillQuiz = populateTicketQuizRowsPage(await ticketQuizRowTemplate, ticket);
+
 		let templateContent = {};
-		templateContent.statusTableRows = values[1];
-		templateContent.quizTableRows = values[2];
-		templateContent.totalPoints = values[3].points;
-		templateContent.ticketName = values[3].name;
-		return populateTemplate(values[0], templateContent);
-	})
-	.then((html) => {res.send(html);})
-	.catch((err) => {console.log(err); res.send("503 Internal server error")});
+		templateContent.statusTableRows = await fillStatuses;
+		templateContent.quizTableRows = await fillQuiz;
+		templateContent.totalPoints = ticket.points ? ticket.points : "-";
+		templateContent.ticketName = ticket.name;
+		let html = populateTemplate(await ticketPageTemplate, templateContent);
+		res.send(html);
+	} catch(err) {
+		res.send("503 Internal server error");
+	}
 });
 
 function readFile(path) {
@@ -58,31 +54,33 @@ function readFile(path) {
 	});
 }
 
-function populateTicketStatusRowsPage(rowTemplate, ticket) {
-	page = "";
+async function populateTicketStatusRowsPage(rowTemplate, ticket) {
+	let page = "";
+	// optimization: fetching all instead one by one
+	let characters = await characterDao.fetchAll();
 	for (let characterId in ticket.statusBets) {
-		templateContent = {};
-		character = characterDao.fetch(characterId);
+		let templateContent = {};
+		let character = characters.find(e => e.id == characterId);
 		templateContent.hitOrMiss = ticket.statusBets[characterId] === character.status ? "bethit" : "betmiss";
 		templateContent.character = character.name;
 		templateContent.prediction = ticket.statusBets[characterId];
 		templateContent.actualStatus = character.status;
-		templateContent.points = ticket.statusHits[characterId];
+		templateContent.points = ticket.statusHits ? ticket.statusHits[characterId] : "-";
 		page = page + populateTemplate(rowTemplate, templateContent);
 	}
 	return page;
 }
 
-function populateTicketQuizRowsPage(rowTemplate, ticket) {
-	page = "";
+async function populateTicketQuizRowsPage(rowTemplate, ticket) {
+	let page = "";
 	for (let questionId in ticket.questionBets) {
-		templateContent = {};
-		quizAnswer = quizAnswerDao.fetch(questionId);
+		let templateContent = {};
+		let quizAnswer = await quizAnswerDao.fetch(questionId);
 		templateContent.hitOrMiss = ticket.questionBets[questionId] === quizAnswer.answer ? "bethit" : "betmiss";
 		templateContent.question = questionSentence(questionId);
 		templateContent.prediction = ticket.questionBets[questionId];
 		templateContent.answer = quizAnswer.answer;
-		templateContent.points = ticket.questionHits[questionId];
+		templateContent.points = ticket.questionHits ? ticket.questionHits[questionId] : "-";
 		page = page + populateTemplate(rowTemplate, templateContent);
 	}
 	return page;

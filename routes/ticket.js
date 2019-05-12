@@ -1,9 +1,9 @@
+const appConf = require('../conf/appConf.js');
 const express = require('express');
 const router = express.Router();
 const svc = require('../services/ticketSvc.js');
-const dao = require('../dao/ticketDao.js');
+const dao = require(`../dao/${appConf.DAO_IMPL}/ticketDao.js`);
 const bus = require('../services/bus.js');
-const appCommon = require('../common/appCommon.js');
 
 router.get('/', function(req, res){
 	handleFetchAllPolling(req.query.dataTimestamp, res);
@@ -41,27 +41,30 @@ router.delete('/', function(req, res){
 });
 
 function handleFetchAllPolling(clientDataTimestamp, response) {
-	handlePolling(clientDataTimestamp, response, function() {return dao.fetchAll();});
+	// handlePolling(clientDataTimestamp, response, function() {return dao.fetchAll();});
+	handlePolling(clientDataTimestamp, response, () => dao.fetchAll());
 };
 
 function handleFetchAllDTOPolling(clientDataTimestamp, response) {
-	handlePolling(clientDataTimestamp, response, function() {return svc.fetchRanked();});
+	// handlePolling(clientDataTimestamp, response, function() {return svc.fetchRanked();});
+	handlePolling(clientDataTimestamp, response, () => svc.fetchRanked());
 };
 
 function handleFetchPolling(id, clientDataTimestamp, response) {
-	handlePolling(clientDataTimestamp, response, function() {return dao.fetch(id);});
+	// handlePolling(clientDataTimestamp, response, function() {return dao.fetch(id);});
+	handlePolling(clientDataTimestamp, response, () => dao.fetch(id));
 };
 
-function handlePolling(clientDataTimestamp, response, fetchResponseData) {
+async function handlePolling(clientDataTimestamp, response, fetchResponseData) {
 	console.log('long polling za tikete');
 	bus.updaterTopic.emit('update', Date.now());
 
-	if (!clientDataTimestamp || (dao.getUpdateTimestamp() - clientDataTimestamp >= appCommon.REFRESH_INTERVAL)) {
-		response.send(createGetResponse(fetchResponseData()));
+	if (!clientDataTimestamp || (dao.getUpdateTimestamp() - clientDataTimestamp >= appConf.FANDOM_REFRESH_INTERVAL)) {
+		response.send(createGetResponse(await fetchResponseData()));
 	} else {
 		// put client connection in queue
-		bus.ticketsTopic.once('notify', function() {
-			response.send(createGetResponse(fetchResponseData()));
+		bus.ticketsTopic.once('notify', async function() {
+			response.send(createGetResponse(await fetchResponseData()));
 		});
 	}
 }

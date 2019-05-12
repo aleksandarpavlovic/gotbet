@@ -1,4 +1,5 @@
-const dao = require('../dao/ticketDao.js');
+const appConf = require('../conf/appConf.js');
+const dao = require(`../dao/${appConf.DAO_IMPL}/ticketDao.js`);
 const STATUS = require('../models/status.js');
 const QUESTION = require('../models/question.js');
 const EventEmitter = require('events').EventEmitter;
@@ -45,6 +46,7 @@ function calculatePoints(ticket, results) {
 		questionHits[id] = points;
 		total = total + points;
 	}
+	
 
 	ticket.statusHits = statusHits;
 	ticket.questionHits = questionHits;
@@ -58,17 +60,18 @@ function calculatePointsList(tickets, results) {
 };
 module.exports.calculatePointsList = calculatePointsList;
 
-module.exports.updatePointsOnAllTickets = function(results) {
-	let tickets = dao.fetchAll();
+module.exports.updatePointsOnAllTickets = async function(results) {
+	let tickets = await dao.fetchAll();
+	let promises = [];
 	calculatePointsList(tickets, results).forEach(ticket => {
-		dao.update(ticket.id, ticket);
+		promises.push(dao.update(ticket.id, ticket));
 	});
-	dao.updateTimestamp();
+	return Promise.all(promises);
 }
 
 // dohvata tikete sortirane po poenima
-module.exports.fetchRanked = function() {
-	let tickets = dao.fetchAllDTO();
+module.exports.fetchRanked = async function() {
+	let tickets = await dao.fetchAllDTO();
 	tickets.sort(function(a, b) {return b.points - a.points;});
 	return tickets;
 };

@@ -1,29 +1,29 @@
 const express = require('express');
 const router = express.Router();
-const dao = require('../dao/quizAnswerDao.js');
+const appConf = require('../conf/appConf.js');
+const dao = require(`../dao/${appConf.DAO_IMPL}/quizAnswerDao.js`);
 const bus = require('../services/bus.js');
-const appCommon = require('../common/appCommon.js');
 
-router.get('/', function(req, res){
-	res.send(dao.fetchAll());
+router.get('/', async function(req, res){
+	res.send(await dao.fetchAll());
 });
 
-router.post('/', function(req, res){
+router.post('/', async function(req, res){
 	// console.log(req.body);
-	dao.createAll(req.body);
+	await dao.createAll(req.body);
 	res.send(req.body);
 	bus.updaterTopic.emit('update', Date.now());
 });
 
-router.put('/:id', function(req, res){
+router.put('/:id', async function(req, res){
 	console.log("pozvan put answer");
-	dao.update(req.params.id, req.body);
+	await dao.update(req.params.id, req.body);
 	res.send(req.body);
 	bus.updaterTopic.emit('update', Date.now());
 });
 
-router.get('/:id', function(req, res){
-	res.send(dao.fetch(req.params.id));
+router.get('/:id', async function(req, res){
+	res.send(await dao.fetch(req.params.id));
 });
 
 router.delete('/:id', function(req, res){

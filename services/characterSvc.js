@@ -1,8 +1,10 @@
-const dao = require('../dao/characterDao.js');
+const appConf = require('../conf/appConf.js');
+const dao = require(`../dao/${appConf.DAO_IMPL}/characterDao.js`);
 
 module.exports.updateStatuses = function(statuses) {
+	let promises = [];
 	for (const [id, status] of Object.entries(statuses)) {
-		dao.updateStatus(id, status);
+		promises.push(dao.updateStatus(id, status));
 	}
-	dao.updateTimestamp();
+	return Promise.all(promises);
 }

@@ -1,7 +1,7 @@
 const fetchDTOAPIUrl = "/api/tickets/dto";
 const ticketPageUrl = "/tickets";
 
-dataTimestamp = 0;
+let dataTimestamp = -1;
 
 // const ranksTable = $("#rankstable > tbody:last");
 const ranksTable = document.getElementById("rankstable").tBodies[0];
@@ -17,8 +17,11 @@ function poll() {
 			dataTimestamp = response.dataTimestamp;
 		}
 		poll();
-	};
-	request.open("GET", fetchDTOAPIUrl+"?dataTimestamp=" + dataTimestamp);
+    };
+    let url = fetchDTOAPIUrl;
+    if (dataTimestamp >= 0)
+        url = url + "?dataTimestamp=" + dataTimestamp;
+	request.open("GET", url);
     request.setRequestHeader("Content-type", "application/json");
     request.send();
 }
@@ -35,7 +38,7 @@ function populateView(data) {
             nameCell.appendChild(a);
             nameCell.style.width = "70%";
             let pointsCell = row.insertCell(1);
-            pointsCell.innerHTML = item.points;
+            pointsCell.innerHTML = item.points ? item.points : "-";
             pointsCell.style.width = "30%";
         });
     }

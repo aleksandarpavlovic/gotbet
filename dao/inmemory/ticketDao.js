@@ -1,13 +1,19 @@
-const updaterDao = require('./updaterDao.js');
+const updaterDao = require('../updaterDao.js');
 
 let db = {};
 
-function create(character) {
-    db[character.id] = character;
+function create(ticket) {
+    db[ticket.id] = ticket;
 }
 
-function createAll(characters) {
-    characters.forEach(c => {create(c)});
+function createAll(tickets) {
+    tickets.forEach(c => {create(c)});
+}
+
+function update(id, ticket) {
+    ticket.id = id;
+    db[id] = ticket;
+    updaterDao.updateTimestamp();
 }
 
 function fetch(id) {
@@ -18,15 +24,14 @@ function fetchAll() {
     return Object.values(db);
 }
 
-function fetchAllIds() {
-    return Object.keys(db);
-}
-
-function updateStatus(id, status) {
-    if (db[id]) {
-        db[id].status = status;
-    }
-    updaterDao.updateTimestamp();
+function fetchAllDTO() {
+    return Object.values(db).map(function(ticket) {
+        let dto = {};
+        dto.id = ticket.id;
+        dto.name = ticket.name;
+        dto.points = ticket.points;
+        return dto;
+    });
 }
 
 function remove(id) {
@@ -50,10 +55,10 @@ function getUpdateTimestamp() {
 module.exports.updateTimestamp = updateTimestamp;
 module.exports.getUpdateTimestamp = getUpdateTimestamp;
 module.exports.create = create;
+module.exports.update = update;
 module.exports.createAll = createAll;
 module.exports.fetch = fetch;
 module.exports.fetchAll = fetchAll;
-module.exports.fetchAllIds = fetchAllIds;
-module.exports.updateStatus = updateStatus;
+module.exports.fetchAllDTO = fetchAllDTO;
 module.exports.remove = remove;
 module.exports.removeAll = removeAll;

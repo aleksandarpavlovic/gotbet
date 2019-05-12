@@ -1,31 +1,39 @@
-const express = require('express');
-const app = express();
-const DEFAULT_PORT = 3000
+const appConf = require('./conf/appConf.js');
+const dbconnection = require(`./dao/${appConf.DAO_IMPL}/connection.js`);
+dbconnection.init(() => initApplication());
 
-app.use(express.json());
+const exitHook = require('exit-hook');
+exitHook(() => {
+  if (dbconnection)
+    dbconnection.close();
+});
 
-const bus = require('./services/bus.js');
-const UpdaterService = require('./services/updaterSvc.js');
-const updaterSvc = new UpdaterService();
+function initApplication() {
+  const express = require('express');
+  const app = express();
+  
+  app.use(express.json());
+  
+  const bus = require('./services/bus.js');
+  const UpdaterService = require('./services/updaterSvc.js');
+  const updaterSvc = new UpdaterService();
+  
+  bus.updaterTopic.on('update', updaterSvc.onClientRequest);
+  
+  const characterRoutes = require('./routes/character.js');
+  const testRoutes = require('./routes/test.js');
+  const ticketRoutes = require('./routes/ticket.js');
+  const quizAnswerRoutes = require('./routes/quizAnswer.js');
+  const htmlRoutes = require('./routes/html.js');
+  
+  app.use('/api/characters', characterRoutes);
+  app.use('/api/tickets', ticketRoutes);
+  app.use('/api/test', testRoutes);
+  app.use('/api/quizanswers', quizAnswerRoutes);
+  app.use('/', htmlRoutes);
+  
+  app.use(express.static(__dirname + "/resources/static"));
+  app.listen(appConf.PORT);
 
-bus.updaterTopic.on('update', updaterSvc.onClientRequest);
-
-const characterRoutes = require('./routes/character.js');
-const testRoutes = require('./routes/test.js');
-const ticketRoutes = require('./routes/ticket.js');
-const quizAnswerRoutes = require('./routes/quizAnswer.js');
-const htmlRoutes = require('./routes/html.js');
-
-app.use('/api/characters', characterRoutes);
-app.use('/api/tickets', ticketRoutes);
-app.use('/api/test', testRoutes);
-app.use('/api/quizanswers', quizAnswerRoutes);
-app.use('/', htmlRoutes);
-
-app.use(express.static(__dirname + "/resources/static"));
-
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = DEFAULT_PORT;
+  console.log('Application started');
 }
-app.listen(port);

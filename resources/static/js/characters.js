@@ -1,7 +1,7 @@
-const ticketPageUrl = "/api/characters";
-dataTimestamp = 0;
+const fetchAPIUrl = "/api/characters";
 
 const charactersTable = document.getElementById("characterstable").tBodies[0];
+let dataTimestamp = -1;
 
 poll();
 
@@ -14,8 +14,11 @@ function poll() {
 			dataTimestamp = response.dataTimestamp;
 		}
 		poll();
-	};
-	request.open("GET", ticketPageUrl+"?dataTimestamp=" + dataTimestamp);
+    };
+    let url = fetchAPIUrl;
+    if (dataTimestamp >= 0)
+        url = url + "?dataTimestamp=" + dataTimestamp;
+	request.open("GET", url);
     request.setRequestHeader("Content-type", "application/json");
     request.send();
 }
