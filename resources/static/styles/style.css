@@ -1,3 +1,7 @@
+:root {
+  --main-font-size: xx-large; 
+}
+
 html {
   background-color: #262626; 
 }
@@ -10,14 +14,14 @@ hr {
   margin-right: auto;
   border-style: inset;
   border-width: 1px;
-  width: 60%
+  width: 90%;
 }
 
 a {
   color: #bfbfbf;
   text-decoration: none;
   font-weight:normal;
-  font-size:large
+  font-size:var(--main-font-size);
 }
 
 a:hover, a:active {
@@ -29,18 +33,21 @@ a:hover, a:active {
   margin-left: auto; 
   margin-right: auto;
   text-align: center;
-  width: 60%
+  font-size:var(--main-font-size);
+  width: 90%;
 }
 
 .ranks td {
   color: #bfbfbf;
   text-align: center;
+  font-size:var(--main-font-size);
 }
 
 .ranks th{
   color: #bfbfbf;
   background-color: #1a1a1a;
   text-align: center;
+  font-size:var(--main-font-size);
   border-bottom: 1px solid #ddd;
 }
 
@@ -55,26 +62,30 @@ a:hover, a:active {
   margin-left: auto; 
   margin-right: auto;
   text-align: center;
-  width: 60%
+  width: 90%;
 }
 
 .ticket td {
   color: #bfbfbf;
   text-align: center;
+  font-size:var(--main-font-size);
 }
 
 .ticket th{
   color: #bfbfbf;
   background-color: #1a1a1a;
   text-align: center;
+  font-size:var(--main-font-size);
   border-bottom: 1px solid #ddd;
 }
 
 tr.bethit {
-  background-color: #2b3b2b
+  background-color: #2b3b2b;
+  font-size:var(--main-font-size);
 }
 
 tr.betmiss {
-  background-color: #3d2929
+  background-color: #3d2929;
+  font-size:var(--main-font-size);
 }
 
