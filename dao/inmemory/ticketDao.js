@@ -4,10 +4,12 @@ let db = {};
 
 function create(ticket) {
     db[ticket.id] = ticket;
+    return Promise.resolve();
 }
 
 function createAll(tickets) {
     tickets.forEach(c => {create(c)});
+    return Promise.resolve();
 }
 
 function update(id, ticket) {
@@ -17,31 +19,33 @@ function update(id, ticket) {
 }
 
 function fetch(id) {
-    return db[id];
+    return Promise.resolve(db[id]);
 }
 
 function fetchAll() {
-    return Object.values(db);
+    return Promise.resolve(Object.values(db));
 }
 
 function fetchAllDTO() {
-    return Object.values(db).map(function(ticket) {
+    return Promise.resolve(Object.values(db).map(function(ticket) {
         let dto = {};
         dto.id = ticket.id;
         dto.name = ticket.name;
         dto.points = ticket.points;
         return dto;
-    });
+    }));
 }
 
 function remove(id) {
     delete db[id];
     updaterDao.updateTimestamp();
+    return Promise.resolve();
 }
 
 function removeAll() {
     db = {};
     updaterDao.updateTimestamp();
+    return Promise.resolve();
 }
 
 function updateTimestamp() {

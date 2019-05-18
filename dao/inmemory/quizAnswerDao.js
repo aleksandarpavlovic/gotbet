@@ -4,22 +4,24 @@ let db = {};
 
 function create(quizAnswer) {
     db[quizAnswer.questionId] = quizAnswer;
+    return Promise.resolve();
 }
 
 function createAll(quizAnswers) {
     quizAnswers.forEach(c => {create(c)});
+    return Promise.resolve();
 }
 
 function fetch(id) {
-    return db[id];
+    return Promise.resolve(db[id]);
 }
 
 function fetchAll() {
-    return Object.values(db);
+    return Promise.resolve(Object.values(db));
 }
 
 function fetchAllIds() {
-    return Object.keys(db);
+    return Promise.resolve(Object.keys(db));
 }
 
 function update(id, answer) {
@@ -27,16 +29,19 @@ function update(id, answer) {
         db[id].answer = answer;
     }
     updaterDao.updateTimestamp();
+    return Promise.resolve();
 }
 
 function remove(id) {
     delete db[id];
     updaterDao.updateTimestamp();
+    return Promise.resolve();
 }
 
 function removeAll() {
     db = {};
     updaterDao.updateTimestamp();
+    return Promise.resolve();
 }
 
 function updateTimestamp() {
