@@ -17,7 +17,7 @@ router.post('/', async function(req, res){
 
 router.put('/:id', async function(req, res){
 	console.log("pozvan put answer");
-	await dao.update(req.params.id, req.body);
+	await dao.update(req.params.id, req.body.answer);
 	res.send(req.body);
 	bus.updaterTopic.emit('update', Date.now());
 });
