@@ -9,7 +9,7 @@ const SCORING = {
 	CORRECT_WW_STATUS : 2,
 	PREGNANCY : 1,
 	NIGHT_KING_SLAYER : 2,
-	THRONE_RULLER : 3
+	THRONE_RULLER : 4
 };
 
 const ticketEventEmitter = new EventEmitter();
